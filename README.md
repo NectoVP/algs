@@ -1,6 +1,7 @@
 # My algs
 
 Usefull links:
+
 https://ru.algorithmica.org/cs/
 
 https://www.geeksforgeeks.org/competitive-programming-a-complete-guide/?ref=shm_outind
