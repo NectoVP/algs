@@ -2,52 +2,51 @@
 #include <vector>
 #include <string>
 
-void build_pi(std::string& s1, std::string& s2, std::vector<int>& pi) {
-    int i = 1, j = 0;
-    while (i < s1.size()) {
-        if (s1[i] == s2[j]) {
-            pi[i + 1] = j + 1;
-            ++i, j++;
+void build_pi(const std::string& pattern, std::vector<int>& pi) {
+    int m = pattern.size();
+    int j = 0;
+    pi[0] = 0;
+
+    for (int i = 1; i < m; i++) {
+        if (pattern[i] == pattern[j]) {
+            j++;
         }
         else {
-            if (j > 0)
-                j = pi[j];
-            else {
-                pi[i + 1] = 0;
-                ++i;
+            while (j > 0 && pattern[i] != pattern[j]) {
+                j = pi[j - 1];
             }
         }
+        pi[i] = j;
     }
 }
 
-void kmp(std::string& s1, std::string& s2) {
-    std::vector<int> answer;
-    std::vector<int> pi(s1.size() + 1);
-    pi[1] = 0;
-    build_pi(s1, s2, pi);
-    int i = 0, j = 0;
-    int n = s1.size(), m = s2.size();
-    while (i < n && j < m) {
-        if (s1[i] == s2[j]) {
-            ++i;
-            ++j;
+void kmp(const std::string& text, const std::string& pattern) {
+    int n = text.size();
+    int m = pattern.size();
+    std::vector<int> pi(m, 0);
+
+    build_pi(pattern, pi);
+
+    std::vector<int> occurrences;
+    int j = 0;
+
+    for (int i = 0; i < n; i++) {
+        while (j > 0 && text[i] != pattern[j]) {
+            j = pi[j - 1];
         }
-        else {
-            if (j > 0)
-                j = pi[j];
-            else
-                ++i;
+        if (text[i] == pattern[j]) {
+            j++;
         }
         if (j == m) {
-            answer.push_back(i - m);
-            j = 0;
+            occurrences.push_back(i - m + 1);
+            j = pi[j - 1];
         }
     }
 
-    std::cout << answer.size() << std::endl;
-    for (auto i : answer)
-        std::cout << i << " ";
-
+    std::cout << occurrences.size() << std::endl;
+    for (auto index : occurrences) {
+        std::cout << index << " ";
+    }
 }
 
 int main() {
@@ -55,8 +54,9 @@ int main() {
     std::getline(std::cin, s1);
     std::getline(std::cin, s2);
 
-    if (s2.length() > s1.length())
+    if (s2.length() > s1.length()) {
         std::swap(s1, s2);
+    }
 
     kmp(s1, s2);
 
