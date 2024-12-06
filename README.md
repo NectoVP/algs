@@ -1,4 +1,4 @@
-# My algs
+# My algs implementation
 
 Usefull links:
 
